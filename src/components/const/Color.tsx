@@ -1,0 +1,9 @@
+export default {
+  PRIMARY: '#141B2D',
+  SECONDARY: '#A4A3A8',
+  ACCENT: '#CA1F31',
+  ACCENT_HOVER: '#AD1121',
+  BG_COLOR: '#EEEEEE',
+  BORDER_COLOR: '#ECEAF4',
+  DANGER: '#E1544B',
+};

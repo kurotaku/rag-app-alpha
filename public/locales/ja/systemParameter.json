@@ -1,0 +1,8 @@
+{
+  "systemParameter": {
+    "key": "キー",
+    "value": "値",
+    "defaultValue": "初期値",
+    "description": "説明"
+  }
+}

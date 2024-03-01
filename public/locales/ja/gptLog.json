@@ -1,0 +1,22 @@
+{
+  "gptLog": {
+    "user": "ユーザー",
+    "gptVendor": "GPTの提供元",
+    "gptModel": "GPTのモデル名",
+    "promptTokens": "プロンプトのトークン数",
+    "completionTokens": "会話のトークン数",
+    "totalTokens": "トータルトークン数",
+    "totalPrompts": "トータルプロンプト",
+    "prompt": "プロンプト",
+    "response": "レスポンス",
+    "useCase": "ユースケース",
+    "startedAt": "開始時刻",
+    "endedAt": "終了時刻",
+    "responseTime": "所要時間",
+    "apiEndpointName": "API名",
+    "clientIp": "IPアドレス",
+    "user": {
+      "name": "ユーザー名"
+    }
+  }
+}

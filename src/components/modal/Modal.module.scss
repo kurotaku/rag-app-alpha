@@ -1,0 +1,55 @@
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1201;
+  animation: fadeon 0.3s ease 0s;
+  padding: 24px;
+  > div {
+    width: 100%;
+    height: calc(100vh - 48px);
+    background: white;
+    border-radius: 8px;
+    margin: auto;
+    animation: scaleon 0.25s ease-out 0s;
+    overflow: hidden;
+    > header {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      > div{
+        font-weight: bold;
+      }
+      > button {
+        display: block;
+        position: relative;
+        width: 24px;
+        height: 24px;
+        margin-left: auto;
+        &::before, &::after{
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 3px;
+          height: 24px;
+          border-radius: 100px;;
+          background: #444;
+        }
+        &::before {
+          transform: translate(-50%,-50%) rotate(45deg);
+        }
+        &::after {
+          transform: translate(-50%,-50%) rotate(-45deg);
+        }
+      }
+    }
+    > div {
+      overflow-y: auto;
+      height: calc(100vh - 48px - 56px);
+    }
+  }
+}

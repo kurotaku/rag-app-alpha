@@ -1,0 +1,25 @@
+{
+  "home": "ホーム",
+  "models": {
+    "user": "ユーザー",
+    "question": "質問項目",
+    "choice": "選択肢",
+    "systemParameter": "システムパラメーター",
+    "gptLog": "GPTログ",
+    "apiEndpoint": "APIエンドポイント",
+    "ragFile": "RAGファイル",
+    "chat": "チャット",
+    "consultation": "相談",
+    "proposal": "提案"
+  },
+  "new": "新規作成",
+  "create": "作成",
+  "edit": "編集",
+  "update": "更新",
+  "delete": "削除",
+  "execute": "実行",
+  "signin": "ログイン",
+  "submit": "送信",
+  "next": "次へ",
+  "prev": "戻る"
+}

@@ -1,0 +1,19 @@
+{
+  "apiEndpoint": {
+    "endpointType": "エンドポイントの種類",
+    "useRag": "RAGを使用",
+    "name": "API名",
+    "description": "説明",
+    "url": "URL",
+    "primaryPrompt": "プロンプトその1",
+    "secondaryPrompt": "プロンプトその2",
+    "tertiaryPrompt": "プロンプトその3",
+    "quaternaryPrompt": "プロンプトその4",
+    "quinaryPrompt": "プロンプトその5",
+    "primaryPromptDescription": "プロンプトその1の説明",
+    "secondaryPromptDescription": "プロンプトその2の説明",
+    "tertiaryPromptDescription": "プロンプトその3の説明",
+    "quaternaryPromptDescription": "プロンプトその4の説明",
+    "quinaryPromptDescription": "プロンプトその5の説明"
+  }
+}

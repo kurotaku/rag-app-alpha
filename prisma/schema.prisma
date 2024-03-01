@@ -1,0 +1,215 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+enum UserRole {
+  ADMIN // Adminユーザー
+  POWER // 管理ユーザー
+  STANDARD // 一般ユーザー
+}
+
+model User {
+  id                   Int                   @id @default(autoincrement())
+  name                 String
+  email                String                @unique
+  password             String
+  role                 UserRole              @default(STANDARD)
+  gptLogs              GptLog[]
+  chats                Chat[]
+  messages             Message[]
+  consultations        Consultation[]
+  consultationMessages ConsultationMessage[]
+  createdAt            DateTime              @default(now()) @map(name: "created_at")
+  updatedAt            DateTime              @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model Question {
+  id        Int      @id @default(autoincrement())
+  name      String
+  enable    Boolean  @default(true)
+  choices   Choice[]
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "questions")
+}
+
+model Choice {
+  id         Int      @id @default(autoincrement())
+  name       String
+  prompt     String   @db.Text
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "choices")
+}
+
+enum GptVendor {
+  OPENAI
+  AZURE
+}
+
+model GptLog {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @map(name: "user_id")
+  user             User      @relation(fields: [userId], references: [id])
+  apiEndpointName  String    @map(name: "api_endpoint_name")
+  gptVendor        GptVendor @default(OPENAI) @map(name: "gpt_vendor")
+  gptModel         String    @map(name: "gpt_model")
+  promptTokens     Int       @map(name: "prompt_tokens")
+  completionTokens Int       @map(name: "completion_tokens")
+  totalTokens      Int       @map(name: "total_tokens")
+  totalPrompts     String    @map(name: "total_prompts") @db.Text
+  prompt           String    @db.Text
+  response         String    @db.Text
+  useCase          String
+  startedAt        DateTime
+  endedAt          DateTime
+  responseTime     Int
+  clientIp         String    @map(name: "client_ip")
+  createdAt        DateTime  @default(now()) @map(name: "created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "gpt_logs")
+}
+
+enum EndpointType {
+  FREE_CHAT
+  CONSULTATION
+  INTERVIEW
+}
+
+model ApiEndpoint {
+  id                          Int            @id @default(autoincrement())
+  endpointType                EndpointType   @default(FREE_CHAT) @map(name: "endpoint_type")
+  useRag                      Boolean        @default(true) @map(name: "use_rag")
+  name                        String         @unique
+  description                 String         @db.Text
+  url                         String         @db.Text
+  primaryPrompt               String         @map(name: "primary_prompt") @db.Text
+  secondaryPrompt             String?        @map(name: "secondary_prompt") @db.Text
+  tertiaryPrompt              String?        @map(name: "tertiary_prompt") @db.Text
+  quaternaryPrompt            String?        @map(name: "quaternary_prompt") @db.Text
+  quinaryPrompt               String?        @map(name: "quinary_prompt") @db.Text
+  primaryPromptDescription    String?        @map(name: "primary_prompt_description") @db.Text
+  secondaryPromptDescription  String?        @map(name: "secondary_prompt_description") @db.Text
+  tertiaryPromptDescription   String?        @map(name: "tertiary_prompt_description") @db.Text
+  quaternaryPromptDescription String?        @map(name: "quaternary_prompt_description") @db.Text
+  quinaryPromptDescription    String?        @map(name: "quinary_prompt_description") @db.Text
+  chats                       Chat[]
+  consultations               Consultation[]
+  createdAt                   DateTime       @default(now()) @map(name: "created_at")
+  updatedAt                   DateTime       @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "api_endpoints")
+}
+
+model RagFile {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "rag_files")
+}
+
+model SystemParameter {
+  id           Int      @id @default(autoincrement())
+  key          String   @unique
+  value        String   @db.Text
+  defaultValue String   @db.Text
+  description  String   @db.Text
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "system_parameters")
+}
+
+model Chat {
+  id            Int          @id @default(autoincrement())
+  name          String
+  userId        Int?         @map(name: "user_id")
+  user          User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  apiEndpointId Int?
+  apiEndpoint   ApiEndpoint? @relation(fields: [apiEndpointId], references: [id])
+  messages      Message[]
+  requestId     String       @map(name: "request_id")
+  createdAt     DateTime     @default(now()) @map(name: "created_at")
+  updatedAt     DateTime     @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "chats")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  role      String
+  content   String   @db.Text
+  agentLog  String?  @map(name: "agent_log") @db.Text
+  userId    Int      @map(name: "user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  chatId    Int      @map(name: "chat_id")
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "messages")
+}
+
+model Consultation {
+  id                   Int                   @id @default(autoincrement())
+  userId               Int?                  @map(name: "user_id")
+  user                 User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  apiEndpointId        Int?                  @map(name: "api_endpoint_id")
+  apiEndpoint          ApiEndpoint?          @relation(fields: [apiEndpointId], references: [id])
+  consultationProposals            ConsultationProposal[]
+  consultationMessages ConsultationMessage[]
+  choices              String?               @db.Text
+  jsonText             String?               @map(name: "json_text") @db.Text
+  detail               String?
+  agentLog             String?               @map(name: "agent_log") @db.Text
+  requestId            String                @map(name: "request_id")
+  createdAt            DateTime              @default(now()) @map(name: "created_at")
+  updatedAt            DateTime              @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "consultations")
+}
+
+model ConsultationMessage {
+  id             Int          @id @default(autoincrement())
+  role           String
+  content        String       @db.Text
+  agentLog       String?      @map(name: "agent_log") @db.Text
+  userId         Int          @map(name: "user_id")
+  user           User         @relation(fields: [userId], references: [id])
+  consultationId Int          @map(name: "consultation_id")
+  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @map(name: "created_at")
+  updatedAt      DateTime     @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "consultation_messages")
+}
+
+model ConsultationProposal {
+  id             Int          @id @default(autoincrement())
+  title          String       @db.Text
+  content        String       @db.Text
+  fullText       String?      @map(name: "full_text") @db.Text
+  consultationId Int          @map(name: "consultation_id")
+  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @map(name: "created_at")
+  updatedAt      DateTime     @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "consultation_proposals")
+}

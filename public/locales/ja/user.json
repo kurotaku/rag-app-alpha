@@ -1,0 +1,18 @@
+{
+  "user": {
+    "id": "ID",
+    "name": "氏名",
+    "email": "Email",
+    "password": "パスワード",
+    "passwordConfirmation": "パスワード確認",
+    "currentPassword": "現在のパスワード",
+    "newPassword": "新しいパスワード",
+    "newPasswordConfirmation": "新しいパスワード確認",
+    "role": "権限"
+  },
+  "UserRole": {
+    "ADMIN": "Admin",
+    "POWER": "管理者ユーザー",
+    "STANDARD": "一般ユーザー"
+  }
+}
